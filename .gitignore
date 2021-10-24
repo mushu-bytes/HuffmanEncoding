@@ -1,0 +1,8 @@
+.DS_Store
+*.swp
+*.py[cod]
+__pycache__/
+*.class
+*~
+.coverage
+text_files/*_out.txt
