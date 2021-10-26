@@ -1,6 +1,10 @@
 from __future__ import annotations
 
-from typing import Optional
+from collections import Iterator
+from typing import Optional, Any
+
+from ordered_list import (
+    OrderedList, insert, remove, contains, index, get, pop, is_empty, size)
 
 
 class HuffmanNode:
@@ -25,9 +29,30 @@ class HuffmanNode:
 
     def __eq__(self, other) -> bool:
         """Returns True if and only if self and other are equal."""
+        return(
+            isinstance(other, HuffmanNode) and
+            self.frequency == other.frequency and
+            self.char == other.char
+        )
 
     def __lt__(self, other) -> bool:
         """Returns True if and only if self < other."""
+
+        if not isinstance(other, HuffmanNode):
+            raise ValueError
+        if self.frequency == other.frequency:
+            if self.char > other.char:
+                return False
+            else:
+                return True
+
+        if self.frequency > other.frequency:
+            return False
+        else:
+            return True
+
+    def __repr__(self):
+        return 'HuffmanNode(%r, %r, %r, %r)' % (self.char, self.frequency, self.left, self.right)
 
 
 def count_frequencies(filename: str) -> list[int]:
@@ -37,6 +62,16 @@ def count_frequencies(filename: str) -> list[int]:
     are the ASCII values of the characters, and the value at a given
     index is the frequency with which that character occured.
     """
+    frequency = [0] * 256
+
+    file = open(filename)
+
+    with open(filename) as file:
+        for line_of_text in file:
+            for char in line_of_text:
+                frequency[ord(char)] += 1
+
+    return frequency
 
 
 def build_huffman_tree(frequencies: list[int]) -> Optional[HuffmanNode]:
@@ -44,6 +79,43 @@ def build_huffman_tree(frequencies: list[int]) -> Optional[HuffmanNode]:
 
     Returns the root of the tree.
     """
+    # init an ordered list and add all the non zero chars into it
+    ordered_list = OrderedList()
+    # the index is the char in ascii format
+    for ascii_val in range(len(frequencies)):
+        if frequencies[ascii_val] != 0:
+            insert(ordered_list, HuffmanNode(ascii_val, frequencies[ascii_val]))
+
+    # create a new node with the least two nodes as children
+    # lesser of the two will be on the left
+    # frequency of parent node will be equal to the sum of the children's frequencies
+    # will take the smallest of the two ascii vals.
+
+    if size(ordered_list) == 0:
+        return None
+
+    while size(ordered_list) > 1:
+        lesser_node = pop(ordered_list, 0)
+        greater_node = pop(ordered_list, 0)
+        new_frequency = lesser_node.frequency + greater_node.frequency
+        new_char = 0
+        if lesser_node.char > greater_node.char:
+            new_char = greater_node.char
+        else:
+            new_char = lesser_node.char
+        insert(ordered_list, HuffmanNode(new_char, new_frequency, lesser_node, greater_node))
+
+    # remember to check whether the list is empty or at one
+    if size(ordered_list) == 1:
+        return pop(ordered_list, 0)
+
+
+def tree_traversal(tree: Optional[HuffmanNode], str = "") -> Iterator[Any]:
+    if tree.left is None and tree.right is None:
+        yield str, tree.char
+        return None
+    yield from tree_traversal(tree.left, str + "0")
+    yield from tree_traversal(tree.right, str + "1")
 
 
 def create_codes(tree: Optional[HuffmanNode]) -> list[str]:
@@ -52,7 +124,15 @@ def create_codes(tree: Optional[HuffmanNode]) -> list[str]:
     The resulting Python list will be of length 256, where the indices
     are the ASCII values of the characters, and the value at a given
     index is the Huffman code for that character.
+
+    Think about if the tree is None, tree has only 1 Node, and so on
     """
+    codes = [""] * 256
+
+    for tup in tree_traversal(tree):
+        codes[tup[1]] = tup[0]
+
+    return codes
 
 
 def create_header(frequencies: list[int]) -> str:
