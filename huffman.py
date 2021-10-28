@@ -70,7 +70,6 @@ def count_frequencies(filename: str) -> list[int]:
         for line_of_text in file:
             for char in line_of_text:
                 frequency[ord(char)] += 1
-
     return frequency
 
 
@@ -128,10 +127,13 @@ def create_codes(tree: Optional[HuffmanNode]) -> list[str]:
     Think about if the tree is None, tree has only 1 Node, and so on
     """
     codes = [""] * 256
+    if tree.left is None and tree.right is None:
+        # must replace tree.frequency with a code? what's the code
+        codes[tree.char] = tree.frequency
+        return codes
 
     for tup in tree_traversal(tree):
         codes[tup[1]] = tup[0]
-
     return codes
 
 
@@ -140,9 +142,35 @@ def create_header(frequencies: list[int]) -> str:
 
     For example, given the file "aaaccbbbb", this would return:
     "97 3 98 4 99 2"
+
+    What happens if the frequencies are all 0, maybe don't call it at all?
     """
+    header = ""
+
+    for ascii in range(len(frequencies)):
+        if frequencies[ascii] != 0:
+            header = header + str(ascii) + " " + str(frequencies[ascii]) + " "
+    return header[:-1]
 
 
 def huffman_encode(in_filename: str, out_filename: str) -> None:
     """Encodes the data in the input file, writing the result to the
     output file."""
+    frequencies = count_frequencies(in_filename)
+    tree = build_huffman_tree(frequencies)
+    if tree is None:
+        return None
+    codes = create_codes(tree)
+    header = create_header(frequencies)
+
+    with open(out_filename, 'w') as file:
+        file.write(header)
+        file.write("\n")
+        with open(in_filename, 'r') as file_two:
+            for line_of_text in file_two:
+                for char in line_of_text:
+                    file.write(codes[ord(char)])
+
+    return None
+
+

@@ -27,6 +27,20 @@ class TestList(unittest.TestCase):
         self.assertLess(node1, node2)
         self.assertGreater(node2, node1)
 
+    def test_node_lt_02(self):
+        node1 = HuffmanNode(220, 5)
+        node2 = HuffmanNode(195, 5)
+
+        self.assertLess(node2, node1)
+        self.assertGreater(node1, node2)
+
+    def test_node_lt_03(self):
+        node1 = HuffmanNode(220, 5)
+        node2 = HuffmanNode(225, 15)
+
+        self.assertLess(node1, node2)
+        self.assertGreater(node2, node1)
+
     def test_node_equality(self):
         node1 = HuffmanNode(97, 10)
         node2 = HuffmanNode(97, 10)
@@ -103,13 +117,26 @@ class TestList(unittest.TestCase):
         self.assertEqual(codes[ord('a')], '0')
         self.assertEqual(codes[ord('b')], '1')
 
-    """
     def test_create_header_01(self):
         frequencies = [0] * 256
         frequencies[97] = 5
         frequencies[98] = 10
 
         self.assertEqual(create_header(frequencies), "97 5 98 10")
+
+    def test_declaration(self):
+        huffman_encode("text_files/declaration.txt", "text_files/dec_output.txt")
+
+        result = subprocess.run(
+            ["diff",
+             "--strip-trailing-cr",
+             "text_files/dec_output.txt",
+             "text_files/declaration_soln.txt"],
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout)
 
     def test_huffman_encode_01(self):
         huffman_encode("text_files/file1.txt", "text_files/file1_out.txt")
@@ -124,7 +151,7 @@ class TestList(unittest.TestCase):
             capture_output=True,
         )
 
-        self.assertEqual(result.returncode, 0, result.stdout)"""
+        self.assertEqual(result.returncode, 0, result.stdout)
 
 
 if __name__ == '__main__':
