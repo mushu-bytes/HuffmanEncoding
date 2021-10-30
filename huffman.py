@@ -4,7 +4,7 @@ from collections import Iterator
 from typing import Optional, Any
 
 from ordered_list import (
-    OrderedList, insert, remove, contains, index, get, pop, is_empty, size)
+    OrderedList, insert, pop, size)
 
 
 class HuffmanNode:
@@ -16,6 +16,7 @@ class HuffmanNode:
         left: The left Huffman sub-tree
         right: The right Huffman sub-tree
     """
+
     def __init__(
             self,
             char: int,
@@ -29,17 +30,15 @@ class HuffmanNode:
 
     def __eq__(self, other) -> bool:
         """Returns True if and only if self and other are equal."""
-        return(
-            isinstance(other, HuffmanNode) and
-            self.frequency == other.frequency and
-            self.char == other.char
+        return (
+                isinstance(other, HuffmanNode) and
+                self.frequency == other.frequency and
+                self.char == other.char
         )
 
     def __lt__(self, other) -> bool:
         """Returns True if and only if self < other."""
 
-        if not isinstance(other, HuffmanNode):
-            raise ValueError
         if self.frequency == other.frequency:
             if self.char > other.char:
                 return False
@@ -51,8 +50,8 @@ class HuffmanNode:
         else:
             return True
 
-    def __repr__(self):
-        return 'HuffmanNode(%r, %r, %r, %r)' % (self.char, self.frequency, self.left, self.right)
+    # def __repr__(self):
+    # return 'HuffmanNode(%r, %r, %r, %r)' % (self.char, self.frequency, self.left, self.right)
 
 
 def count_frequencies(filename: str) -> list[int]:
@@ -63,8 +62,6 @@ def count_frequencies(filename: str) -> list[int]:
     index is the frequency with which that character occured.
     """
     frequency = [0] * 256
-
-    file = open(filename)
 
     with open(filename) as file:
         for line_of_text in file:
@@ -103,13 +100,12 @@ def build_huffman_tree(frequencies: list[int]) -> Optional[HuffmanNode]:
         else:
             new_char = lesser_node.char
         insert(ordered_list, HuffmanNode(new_char, new_frequency, lesser_node, greater_node))
-
     # remember to check whether the list is empty or at one
     if size(ordered_list) == 1:
         return pop(ordered_list, 0)
 
 
-def tree_traversal(tree: Optional[HuffmanNode], str = "") -> Iterator[Any]:
+def tree_traversal(tree: Optional[HuffmanNode], str="") -> Iterator[Any]:
     if tree.left is None and tree.right is None:
         yield str, tree.char
         return None
@@ -129,7 +125,7 @@ def create_codes(tree: Optional[HuffmanNode]) -> list[str]:
     codes = [""] * 256
     if tree.left is None and tree.right is None:
         # must replace tree.frequency with a code? what's the code
-        codes[tree.char] = tree.frequency
+        codes[tree.char] = "1"
         return codes
 
     for tup in tree_traversal(tree):
@@ -172,5 +168,3 @@ def huffman_encode(in_filename: str, out_filename: str) -> None:
                     file.write(codes[ord(char)])
 
     return None
-
-

@@ -16,10 +16,6 @@ class TestList(unittest.TestCase):
 
         self.assertEqual(frequencies[96:104], expected)
 
-    def test_count_frequencies_multiline(self):
-        # should we be counting newline chars. it counts multi lines
-        frequencies = count_frequencies("text_files/multiline.txt")
-
     def test_node_lt_01(self):
         node1 = HuffmanNode(97, 10)
         node2 = HuffmanNode(65, 20)
@@ -146,6 +142,62 @@ class TestList(unittest.TestCase):
              '--strip-trailing-cr',
              'text_files/file1_out.txt',
              'text_files/file1_soln.txt'],
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout)
+
+    def test_huffman_file_two(self):
+        huffman_encode("text_files/file2.txt", "text_files/file_two_out.txt")
+
+        result = subprocess.run(
+            ['diff',
+             '--strip-trailing-cr',
+             'text_files/file_two_out.txt',
+             'text_files/file2_soln.txt'],
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout)
+
+    def test_huffman_empty(self):
+        huffman_encode("text_files/empty_file.txt", "text_files/empty_file_out.txt")
+
+        result = subprocess.run(
+            ['diff',
+             '--strip-trailing-cr',
+             'text_files/empty_file_out.txt',
+             'text_files/empty_file_soln.txt'],
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout)
+
+    def test_huffman_one_node(self):
+        huffman_encode("text_files/one_node.txt", "text_files/one_node_out.txt")
+
+        result = subprocess.run(
+            ['diff',
+             '--strip-trailing-cr',
+             'text_files/one_node_out.txt',
+             'text_files/one_node_soln.txt'],
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout)
+
+    def test_huffman_single_char(self):
+        huffman_encode("text_files/single_char.txt", "text_files/single_char_out.txt")
+
+        result = subprocess.run(
+            ['diff',
+             '--strip-trailing-cr',
+             'text_files/single_char_out.txt',
+             'text_files/single_char_soln.txt'],
             check=False,
             text=True,
             capture_output=True,
