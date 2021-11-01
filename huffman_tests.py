@@ -56,6 +56,54 @@ class TestList(unittest.TestCase):
             HuffmanNode(97, 15, HuffmanNode(97, 5), HuffmanNode(98, 10))
         )
 
+    def test_node_equality_02(self):
+        node1 = HuffmanNode(97, 10, HuffmanNode(98, 7))
+        node2 = HuffmanNode(97, 10)
+
+        self.assertNotEqual(node1, node2)
+
+    def test_node_equality_03(self):
+        node1 = HuffmanNode(97, 10, None, HuffmanNode(98, 3))
+        node2 = HuffmanNode(97, 10)
+
+        self.assertNotEqual(node1, node2)
+
+    def test_node_equality_04(self):
+        node1 = HuffmanNode(97, 10, None, HuffmanNode(98, 3))
+        node2 = HuffmanNode(97, 10, None, HuffmanNode(98, 3))
+
+        self.assertEqual(node1, node2)
+
+    def test_node_equality_05(self):
+        node1 = HuffmanNode(97,
+                            10,
+                            HuffmanNode(97,
+                                        2,
+                                        HuffmanNode(100, 12),
+                                        HuffmanNode(10, 4)),
+                            HuffmanNode(98, 3))
+        node2 = HuffmanNode(97, 10, None, HuffmanNode(98, 3))
+
+        self.assertNotEqual(node1, node2)
+
+    def test_node_equality_06(self):
+        node1 = HuffmanNode(97,
+                            10,
+                            HuffmanNode(97,
+                                        2,
+                                        HuffmanNode(100, 12),
+                                        HuffmanNode(10, 4)),
+                            HuffmanNode(98, 3))
+        node2 = HuffmanNode(97,
+                            10,
+                            HuffmanNode(97,
+                                        2,
+                                        HuffmanNode(100, 12),
+                                        HuffmanNode(10, 4)),
+                            HuffmanNode(98, 3))
+
+        self.assertEqual(node1, node2)
+
     def test_empty_frequencies(self):
         frequencies = [0] * 256
         huffman_tree = build_huffman_tree(frequencies)

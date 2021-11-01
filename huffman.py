@@ -33,7 +33,9 @@ class HuffmanNode:
         return (
                 isinstance(other, HuffmanNode) and
                 self.frequency == other.frequency and
-                self.char == other.char
+                self.char == other.char and
+                self.left == other.left and
+                self.right == other.right
         )
 
     def __lt__(self, other) -> bool:
