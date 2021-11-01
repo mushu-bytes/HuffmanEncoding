@@ -89,12 +89,12 @@ class TestList(unittest.TestCase):
         self.assertEqual(create_header(frequencies), "97 5 98 10")
 
     def test_declaration(self):
-        huffman_encode("text_files/declaration.txt", "text_files/decout.txt")
+        huffman_encode("text_files/declaration.txt", "text_files/dec_out.txt")
 
         result = subprocess.run(
             ["diff",
              "--strip-trailing-cr",
-             "text_files/decout.txt",
+             "text_files/dec_out.txt",
              "text_files/declaration_soln.txt"],
             check=False,
             text=True,
