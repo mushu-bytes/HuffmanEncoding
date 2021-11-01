@@ -42,15 +42,9 @@ class HuffmanNode:
         """Returns True if and only if self < other."""
 
         if self.frequency == other.frequency:
-            if self.char > other.char:
-                return False
-            else:
-                return True
+            return self.char < other.char
 
-        if self.frequency > other.frequency:
-            return False
-        else:
-            return True
+        return self.frequency < other.frequency
 
 
 def count_frequencies(filename: str) -> list[int]:
@@ -165,6 +159,7 @@ def huffman_encode(in_filename: str, out_filename: str) -> None:
     if tree.left is None and tree.right is None:
         with open(out_filename, "w") as file:
             file.write(header)
+            file.write("\n")
 
         return None
 
