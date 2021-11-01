@@ -173,6 +173,21 @@ class TestList(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stdout)
 
+    def test_multi_line(self):
+        huffman_encode("text_files/multiline.txt", "text_files/m_out.txt")
+
+        result = subprocess.run(
+            ['diff',
+             '--strip-trailing-cr',
+             'text_files/m_out.txt',
+             'text_files/multiline_soln.txt'],
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+
+        self.assertEqual(result.returncode, 0, result.stdout)
+
 
 if __name__ == '__main__':
     unittest.main()
