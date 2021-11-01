@@ -50,9 +50,6 @@ class HuffmanNode:
         else:
             return True
 
-    # def __repr__(self):
-    # return 'HuffmanNode(%r, %r, %r, %r)' % (self.char, self.frequency, self.left, self.right)
-
 
 def count_frequencies(filename: str) -> list[int]:
     """Reads the given file and counts the frequency of each character.
@@ -80,11 +77,11 @@ def build_huffman_tree(frequencies: list[int]) -> Optional[HuffmanNode]:
     # the index is the char in ascii format
     for ascii_val in range(len(frequencies)):
         if frequencies[ascii_val] != 0:
-            insert(ordered_list, HuffmanNode(ascii_val, frequencies[ascii_val]))
+            insert(ordered_list,
+                   HuffmanNode(ascii_val, frequencies[ascii_val]))
 
     # create a new node with the least two nodes as children
     # lesser of the two will be on the left
-    # frequency of parent node will be equal to the sum of the children's frequencies
     # will take the smallest of the two ascii vals.
 
     if size(ordered_list) == 0:
@@ -99,7 +96,8 @@ def build_huffman_tree(frequencies: list[int]) -> Optional[HuffmanNode]:
             new_char = greater_node.char
         else:
             new_char = lesser_node.char
-        insert(ordered_list, HuffmanNode(new_char, new_frequency, lesser_node, greater_node))
+        insert(ordered_list,
+               HuffmanNode(new_char, new_frequency, lesser_node, greater_node))
     # remember to check whether the list is empty or at one
     if size(ordered_list) == 1:
         return pop(ordered_list, 0)
@@ -123,13 +121,10 @@ def create_codes(tree: Optional[HuffmanNode]) -> list[str]:
     Think about if the tree is None, tree has only 1 Node, and so on
     """
     codes = [""] * 256
-    if tree.left is None and tree.right is None:
-        # must replace tree.frequency with a code? what's the code
-        codes[tree.char] = "1"
-        return codes
 
     for tup in tree_traversal(tree):
         codes[tup[1]] = tup[0]
+
     return codes
 
 
@@ -146,6 +141,7 @@ def create_header(frequencies: list[int]) -> str:
     for ascii in range(len(frequencies)):
         if frequencies[ascii] != 0:
             header = header + str(ascii) + " " + str(frequencies[ascii]) + " "
+
     return header[:-1]
 
 
@@ -154,10 +150,21 @@ def huffman_encode(in_filename: str, out_filename: str) -> None:
     output file."""
     frequencies = count_frequencies(in_filename)
     tree = build_huffman_tree(frequencies)
-    if tree is None:
-        return None
-    codes = create_codes(tree)
     header = create_header(frequencies)
+    # if empty file
+    if tree is None:
+        with open(out_filename, "w") as file:
+            file.write(header)
+            file.write("\n")
+        return None
+
+    codes = create_codes(tree)
+    # if single char
+    if tree.left is None and tree.right is None:
+        with open(out_filename, "w") as file:
+            file.write(header)
+
+        return None
 
     with open(out_filename, 'w') as file:
         file.write(header)

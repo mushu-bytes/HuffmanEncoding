@@ -56,38 +56,6 @@ class TestList(unittest.TestCase):
             HuffmanNode(97, 15, HuffmanNode(97, 5), HuffmanNode(98, 10))
         )
 
-    def test_build_huffman_tree_02(self):
-        frequencies = [0] * 256
-        frequencies[97] = 5
-        frequencies[98] = 10
-        frequencies[112] = 15
-        frequencies[109] = 16
-        frequencies[110] = 5
-        frequencies[105] = 10
-
-        huffman_tree = build_huffman_tree(frequencies)
-
-        # NOTE: This also requires a working __eq__ for your HuffmanNode
-
-        self.assertEqual(
-            huffman_tree,
-            HuffmanNode(97,
-                        61,
-                        HuffmanNode(105,
-                                    25,
-                                    HuffmanNode(105, 10),
-                                    HuffmanNode(112, 15)),
-                        HuffmanNode(97,
-                                    36,
-                                    HuffmanNode(109, 16),
-                                    HuffmanNode(97,
-                                                20,
-                                                HuffmanNode(97,
-                                                            10,
-                                                            HuffmanNode(97, 5),
-                                                            HuffmanNode(110, 5)),
-                                                HuffmanNode(98, 10)))))
-
     def test_empty_frequencies(self):
         frequencies = [0] * 256
         huffman_tree = build_huffman_tree(frequencies)
@@ -121,12 +89,12 @@ class TestList(unittest.TestCase):
         self.assertEqual(create_header(frequencies), "97 5 98 10")
 
     def test_declaration(self):
-        huffman_encode("text_files/declaration.txt", "text_files/dec_output.txt")
+        huffman_encode("text_files/declaration.txt", "text_files/decout.txt")
 
         result = subprocess.run(
             ["diff",
              "--strip-trailing-cr",
-             "text_files/dec_output.txt",
+             "text_files/decout.txt",
              "text_files/declaration_soln.txt"],
             check=False,
             text=True,
@@ -163,12 +131,12 @@ class TestList(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout)
 
     def test_huffman_empty(self):
-        huffman_encode("text_files/empty_file.txt", "text_files/empty_file_out.txt")
+        huffman_encode("text_files/empty.txt", "text_files/empty_out.txt")
 
         result = subprocess.run(
             ['diff',
              '--strip-trailing-cr',
-             'text_files/empty_file_out.txt',
+             'text_files/empty_out.txt',
              'text_files/empty_file_soln.txt'],
             check=False,
             text=True,
@@ -177,12 +145,12 @@ class TestList(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout)
 
     def test_huffman_one_node(self):
-        huffman_encode("text_files/one_node.txt", "text_files/one_node_out.txt")
+        huffman_encode("text_files/one.txt", "text_files/one_out.txt")
 
         result = subprocess.run(
             ['diff',
              '--strip-trailing-cr',
-             'text_files/one_node_out.txt',
+             'text_files/one_out.txt',
              'text_files/one_node_soln.txt'],
             check=False,
             text=True,
@@ -191,12 +159,12 @@ class TestList(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout)
 
     def test_huffman_single_char(self):
-        huffman_encode("text_files/single_char.txt", "text_files/single_char_out.txt")
+        huffman_encode("text_files/single.txt", "text_files/single_out.txt")
 
         result = subprocess.run(
             ['diff',
              '--strip-trailing-cr',
-             'text_files/single_char_out.txt',
+             'text_files/single_out.txt',
              'text_files/single_char_soln.txt'],
             check=False,
             text=True,

@@ -5,6 +5,7 @@ from typing import Any, Optional
 
 class Node:
     """Represents a node to be used in a doubly linked list."""
+
     def __init__(
             self,
             value: Any,
@@ -27,6 +28,7 @@ class OrderedList:
     than and of equality.  That is to say, the contents of the list must
     implement both __lt__ and __eq__.
     """
+
     def __init__(self):
         self.size = 0
         self.dummy = Node(None)
@@ -35,10 +37,10 @@ class OrderedList:
 def insert(lst: OrderedList, value: Any) -> None:
     # covered
     curr = lst.dummy
-    """ 
+    """
     index until we hit the last node or when
     the value is not greater than curr.value
-    we want to stop right when the next node is a dummy or when 
+    we want to stop right when the next node is a dummy or when
     the next node is greater than our value
     """
     while curr.next is not lst.dummy and value > curr.next.value:
