@@ -188,6 +188,21 @@ class TestList(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stdout)
 
+    def test_new_line(self):
+        huffman_encode("text_files/new_line.txt", "text_files/new_out.txt")
+
+        result = subprocess.run(
+            ['diff',
+             '--strip-trailing-cr',
+             'text_files/new_out.txt',
+             'text_files/new_soln.txt'],
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+
+        self.assertEqual(result.returncode, 0, result.stdout)
+
 
 if __name__ == '__main__':
     unittest.main()

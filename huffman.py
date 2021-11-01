@@ -155,6 +155,7 @@ def huffman_encode(in_filename: str, out_filename: str) -> None:
     if tree is None:
         with open(out_filename, "w") as file:
             file.write(header)
+            file.write("\n")
         return None
 
     codes = create_codes(tree)
