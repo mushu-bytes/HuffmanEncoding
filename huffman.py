@@ -155,7 +155,6 @@ def huffman_encode(in_filename: str, out_filename: str) -> None:
             file.write(header)
             file.write("\n")
         return None
-        # if single char
 
     codes = create_codes(tree)
 
