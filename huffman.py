@@ -117,6 +117,8 @@ def create_codes(tree: Optional[HuffmanNode]) -> list[str]:
     Think about if the tree is None, tree has only 1 Node, and so on
     """
     codes = [""] * 256
+    if tree is None:
+        return codes
 
     for tup in tree_traversal(tree):
         codes[tup[1]] = tup[0]
@@ -153,9 +155,10 @@ def huffman_encode(in_filename: str, out_filename: str) -> None:
             file.write(header)
             file.write("\n")
         return None
+        # if single char
 
     codes = create_codes(tree)
-    # if single char
+
     if tree.left is None and tree.right is None:
         with open(out_filename, "w") as file:
             file.write(header)
