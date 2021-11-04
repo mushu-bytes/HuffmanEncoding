@@ -143,6 +143,46 @@ def create_header(frequencies: list[int]) -> str:
     return header[:-1]
 
 
+def parse_header(header: str) -> list[int]:
+    # the idea is to have a pointer at the second element in each frequency
+    # pair and increment out counter by two.
+    split_header = header.split()
+    frequency = [0] * 256
+    for freq_pair in range(1, len(split_header), 2):
+        frequency[int(split_header[freq_pair - 1])] = int(split_header[freq_pair])
+    return frequency
+
+
+def huffman_decode(in_filename: str, out_filename: str) -> None:
+    # test for single char cases.
+    with open(out_filename, 'w') as file:
+        with open(in_filename, 'r') as file_two:
+            header = file_two.readline()
+            frequencies = parse_header(header)
+            tree = build_huffman_tree(frequencies)
+            root = tree
+            if tree is None:
+                return None
+            elif tree.left is None and tree.right is None:
+                for i in range(tree.frequency):
+                    file.write(chr(tree.char))
+                return None
+
+            for line_of_text in file_two:
+                for char in line_of_text:
+                    if char == '0':
+                        tree = tree.left
+                        if tree.right is None and tree.left is None:
+                            file.write(chr(tree.char))
+                            tree = root
+
+                    else:
+                        tree = tree.right
+                        if tree.right is None and tree.left is None:
+                            file.write(chr(tree.char))
+                            tree = root
+
+
 def huffman_encode(in_filename: str, out_filename: str) -> None:
     """Encodes the data in the input file, writing the result to the
     output file."""
