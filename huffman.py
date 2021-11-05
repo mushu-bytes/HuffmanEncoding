@@ -149,7 +149,8 @@ def parse_header(header: str) -> list[int]:
     split_header = header.split()
     frequency = [0] * 256
     for freq_pair in range(1, len(split_header), 2):
-        frequency[int(split_header[freq_pair - 1])] = int(split_header[freq_pair])
+        frequency[int(split_header[freq_pair - 1])] = int(
+            split_header[freq_pair])
     return frequency
 
 
