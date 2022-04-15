@@ -135,6 +135,12 @@ class TestList(unittest.TestCase):
 
         self.assertEqual(codes, [''] * 256)
 
+    def test_create_codes_03(self):
+        huffman_tree = HuffmanNode(97, 1, None, None)
+        codes = create_codes(huffman_tree)
+
+        print(codes)
+
     def test_create_header_01(self):
         frequencies = [0] * 256
         frequencies[97] = 5

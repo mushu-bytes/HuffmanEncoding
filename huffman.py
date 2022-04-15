@@ -37,13 +37,15 @@ class HuffmanNode:
                 self.left == other.left and
                 self.right == other.right
         )
+        # You have to check whether self and other's children's are equal
 
     def __lt__(self, other) -> bool:
         """Returns True if and only if self < other."""
-
+        # first check if the frequencies are equal
         if self.frequency == other.frequency:
+            # if yes, return the comparisons between the chars
             return self.char < other.char
-
+        # if no, return the comparison between the frequency.
         return self.frequency < other.frequency
 
 
@@ -60,6 +62,7 @@ def count_frequencies(filename: str) -> list[int]:
         for line_of_text in file:
             for char in line_of_text:
                 frequency[ord(char)] += 1
+    # for each char (the index) that appears, increment its count
     return frequency
 
 
@@ -84,6 +87,7 @@ def build_huffman_tree(frequencies: list[int]) -> Optional[HuffmanNode]:
         return None
 
     while size(ordered_list) > 1:
+        # popping the first two and joining them
         lesser_node = pop(ordered_list, 0)
         greater_node = pop(ordered_list, 0)
         new_frequency = lesser_node.frequency + greater_node.frequency
